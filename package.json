@@ -1,0 +1,101 @@
+{
+  "name": "synthbot",
+  "version": "1.0.0",
+  "description": "An Advanced AI Voice Assistant with Cyberpunk UI, Multi-Platform AI Integration, and Quantum Computing Enhancements",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "dev": "python3 -m http.server 8000",
+    "serve": "python3 -m http.server 8000",
+    "lint": "eslint *.js --ext .js",
+    "lint:fix": "eslint *.js --ext .js --fix",
+    "format": "prettier --write *.js *.html *.css",
+    "format:check": "prettier --check *.js *.html *.css",
+    "test": "echo \"No tests specified\" && exit 0",
+    "build": "echo \"No build process needed\" && exit 0",
+    "clean": "rm -rf synthbot_data/",
+    "export": "node -e \"console.log('Data export functionality is built into the app')\"",
+    "validate": "node -e \"const fs = require('fs'); const data = JSON.parse(fs.readFileSync('synthbot_data/export_*.json')); console.log('Data validation passed')\"",
+    "docs": "echo \"Documentation is in README.md and other markdown files\"",
+    "help": "echo \"Available scripts: start, dev, serve, lint, format, test, clean, export, validate, docs\""
+  },
+  "keywords": [
+    "ai",
+    "voice-assistant",
+    "openai",
+    "anthropic",
+    "elevenlabs",
+    "quantum-computing",
+    "cyberpunk",
+    "chatbot",
+    "speech-synthesis",
+    "javascript",
+    "html5",
+    "css3"
+  ],
+  "author": "SynthBot Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/synthbot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/synthbot/issues"
+  },
+  "homepage": "https://github.com/yourusername/synthbot#readme",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "prettier": "^2.8.0",
+    "htmlhint": "^1.1.0",
+    "stylelint": "^14.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "files": [
+    "index.html",
+    "file_db.js",
+    "database_connection.js",
+    "database_setup.sql",
+    "README.md",
+    "LICENSE",
+    ".gitignore"
+  ],
+  "directories": {
+    "doc": "docs"
+  },
+  "config": {
+    "port": 8000,
+    "host": "localhost"
+  },
+  "synthbot": {
+    "version": "1.0.0",
+    "features": [
+      "Multi-AI Platform Support",
+      "Advanced Speech Synthesis",
+      "Cyberpunk UI/UX",
+      "File-Based Database",
+      "Quantum Computing Integration",
+      "Voice Input/Output",
+      "Data Export/Import",
+      "Cross-Browser Compatibility"
+    ],
+    "supportedAI": [
+      "OpenAI GPT-4/GPT-3.5",
+      "Anthropic Claude",
+      "Enhanced Local AI",
+      "IBM Quantum"
+    ],
+    "supportedVoices": [
+      "ElevenLabs",
+      "OpenAI TTS",
+      "Browser TTS"
+    ]
+  }
+} 

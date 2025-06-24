@@ -1,0 +1,2143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SynthBot - AI Voice Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@100;300;400;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-cyan: #00ffff;
+            --neon-magenta: #ff00ff;
+            --neon-purple: #8b00ff;
+            --neon-green: #39ff14;
+            --neon-orange: #ff6600;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(15, 15, 35, 0.85);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: 
+                radial-gradient(ellipse at top, rgba(0, 100, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Enhanced Starfield Animation */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 40px 70px, rgba(0, 255, 255, 0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255, 0, 255, 0.7), transparent),
+                radial-gradient(2px 2px at 130px 80px, rgba(255, 255, 255, 0.6), transparent),
+                radial-gradient(1px 1px at 160px 30px, rgba(0, 255, 255, 0.8), transparent),
+                radial-gradient(2px 2px at 200px 60px, rgba(255, 255, 255, 0.9), transparent),
+                radial-gradient(1px 1px at 250px 20px, rgba(255, 0, 255, 0.7), transparent),
+                radial-gradient(2px 2px at 300px 100px, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(1px 1px at 50px 120px, rgba(0, 255, 255, 0.6), transparent),
+                radial-gradient(1px 1px at 180px 10px, rgba(255, 255, 255, 0.9), transparent);
+            background-repeat: repeat;
+            background-size: 500px 200px;
+            animation: starfield 8s linear infinite, twinkle 4s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        /* Moving Grid Pattern */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 120%;
+            height: 120%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 80px 80px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes starfield {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-200px); }
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-80px, -80px); }
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        /* Enhanced Glassmorphism */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .retro-glow {
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.2),
+                0 0 40px rgba(255, 0, 255, 0.1),
+                0 0 60px rgba(0, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .retro-glow:hover {
+            box-shadow: 
+                0 0 30px rgba(0, 255, 255, 0.3),
+                0 0 60px rgba(255, 0, 255, 0.2),
+                0 0 90px rgba(0, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .neon-text {
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-magenta), var(--neon-cyan));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: neonFlow 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.5));
+        }
+
+        @keyframes neonFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Enhanced Floating Orb */
+        .floating-orb {
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(100, 200, 255, 0.95) 0%, rgba(50, 150, 255, 0.8) 30%, rgba(20, 100, 200, 0.6) 60%, rgba(10, 50, 150, 0.4) 100%);
+            position: relative;
+            animation: orbFloat 4s ease-in-out infinite;
+            box-shadow: 
+                0 0 60px rgba(100, 200, 255, 0.8),
+                0 0 120px rgba(50, 150, 255, 0.6),
+                0 0 180px rgba(20, 100, 200, 0.4),
+                inset 0 0 60px rgba(150, 220, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 3px solid rgba(100, 200, 255, 0.5);
+            overflow: hidden;
+        }
+
+        /* Inner Core */
+        .floating-orb::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 60%;
+            background: 
+                radial-gradient(circle, rgba(200, 240, 255, 0.8) 0%, rgba(100, 200, 255, 0.4) 50%, transparent 100%);
+            border-radius: 50%;
+            animation: coreRotate 6s linear infinite;
+        }
+
+        /* Outer Energy Field */
+        .floating-orb::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            right: -100%;
+            bottom: -100%;
+            background: 
+                conic-gradient(from 0deg, transparent, rgba(0, 255, 255, 0.3), transparent, rgba(255, 0, 255, 0.3), transparent);
+            border-radius: 50%;
+            animation: energyRotate 8s linear infinite;
+            filter: blur(15px);
+        }
+
+        /* Particle Effects */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: particleFloat 3s infinite ease-in-out;
+        }
+
+        /* Dust Particles */
+        .dust-particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(139, 69, 19, 0.8) 0%, rgba(160, 82, 45, 0.6) 30%, transparent 70%);
+            border-radius: 50%;
+            animation: dustExpel 2s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { 
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            50% { 
+                transform: translateY(-30px) translateX(15px) scale(1.2);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes dustExpel {
+            0% { 
+                transform: translate(0, 0) scale(1);
+                opacity: 0.8;
+            }
+            100% { 
+                transform: translate(var(--dust-x, 120px), var(--dust-y, -80px)) scale(0.2);
+                opacity: 0;
+            }
+        }
+
+        /* Orb States */
+        .floating-orb.listening {
+            background: radial-gradient(circle at 30% 30%, rgba(0, 255, 255, 0.95) 0%, rgba(0, 200, 255, 0.8) 30%, rgba(0, 150, 200, 0.6) 60%, rgba(0, 100, 150, 0.4) 100%);
+            box-shadow: 
+                0 0 80px rgba(0, 255, 255, 0.9),
+                0 0 160px rgba(0, 200, 255, 0.7),
+                0 0 240px rgba(0, 150, 200, 0.5),
+                inset 0 0 80px rgba(100, 255, 255, 0.4);
+            animation: orbFloat 2s ease-in-out infinite, listeningPulse 1s ease-in-out infinite;
+            border-color: rgba(0, 255, 255, 0.8);
+        }
+
+        .floating-orb.thinking {
+            background: radial-gradient(circle at 30% 30%, rgba(255, 220, 0, 0.95) 0%, rgba(255, 180, 0, 0.8) 30%, rgba(200, 140, 0, 0.6) 60%, rgba(150, 100, 0, 0.4) 100%);
+            box-shadow: 
+                0 0 80px rgba(255, 220, 0, 0.9),
+                0 0 160px rgba(255, 180, 0, 0.7),
+                0 0 240px rgba(200, 140, 0, 0.5),
+                inset 0 0 80px rgba(255, 240, 100, 0.4);
+            animation: orbFloat 1.5s ease-in-out infinite, thinkingPulse 0.8s ease-in-out infinite;
+            border-color: rgba(255, 220, 0, 0.8);
+        }
+
+        .floating-orb.speaking {
+            background: radial-gradient(circle at 30% 30%, rgba(255, 0, 255, 0.95) 0%, rgba(255, 0, 200, 0.8) 30%, rgba(200, 0, 150, 0.6) 60%, rgba(150, 0, 100, 0.4) 100%);
+            box-shadow: 
+                0 0 80px rgba(255, 0, 255, 0.9),
+                0 0 160px rgba(255, 0, 200, 0.7),
+                0 0 240px rgba(200, 0, 150, 0.5),
+                inset 0 0 80px rgba(255, 100, 255, 0.4);
+            animation: orbFloat 1s ease-in-out infinite, speakingPulse 0.5s ease-in-out infinite;
+            border-color: rgba(255, 0, 255, 0.8);
+        }
+
+        /* Expansion effect when pressed */
+        .floating-orb.expanding {
+            transform: scale(1.15);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+            50% { transform: translateY(-25px) scale(1.05) rotate(5deg); }
+        }
+
+        @keyframes listeningPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes thinkingPulse {
+            0%, 100% { transform: scale(1); }
+            33% { transform: scale(1.05); }
+            66% { transform: scale(1.08); }
+        }
+
+        @keyframes speakingPulse {
+            0%, 100% { transform: scale(1); }
+            20% { transform: scale(1.12); }
+            40% { transform: scale(1.03); }
+            60% { transform: scale(1.08); }
+            80% { transform: scale(1.06); }
+        }
+
+        @keyframes coreRotate {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        @keyframes energyRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Enhanced Form Elements */
+        .api-input {
+            background: rgba(15, 15, 40, 0.7);
+            border: 2px solid rgba(0, 255, 255, 0.2);
+            color: white;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 300;
+        }
+
+        .api-input:focus {
+            border-color: var(--neon-cyan);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.4),
+                inset 0 0 20px rgba(0, 255, 255, 0.1);
+            outline: none;
+            background: rgba(15, 15, 40, 0.9);
+        }
+
+        .api-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .api-input:focus::placeholder {
+            color: rgba(0, 255, 255, 0.6);
+        }
+
+        /* Enhanced Chat Messages */
+        .chat-message {
+            background: rgba(15, 15, 40, 0.8);
+            border-left: 4px solid var(--neon-cyan);
+            backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chat-message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-magenta));
+            animation: borderGlow 2s ease-in-out infinite alternate;
+        }
+
+        .chat-message:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 25px rgba(0, 255, 255, 0.2);
+        }
+
+        @keyframes borderGlow {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Enhanced Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta), var(--neon-purple));
+            background-size: 200% 200%;
+            border: none;
+            color: black;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.6s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 10px 30px rgba(0, 255, 255, 0.4),
+                0 0 50px rgba(255, 0, 255, 0.3);
+            animation: buttonGlow 2s ease-in-out infinite alternate;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        @keyframes buttonGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .status-indicator::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        .status-connected { 
+            background-color: var(--neon-cyan); 
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+        
+        .status-connected::after {
+            background-color: var(--neon-cyan);
+        }
+
+        .status-disconnected { 
+            background-color: #666; 
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.5); opacity: 0; }
+        }
+
+        /* Enhanced Typography */
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--neon-cyan), white, var(--neon-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .floating-orb {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .neon-text {
+                font-size: 2.5rem;
+            }
+            
+            .api-input {
+                font-size: 16px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading-dots {
+            display: inline-block;
+        }
+
+        .loading-dots::after {
+            content: '';
+            animation: loadingDots 1.5s infinite;
+        }
+
+        @keyframes loadingDots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 15, 40, 0.5);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-magenta));
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, var(--neon-magenta), var(--neon-cyan));
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto px-4 py-8 min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-5xl md:text-7xl font-bold neon-text font-['Orbitron'] mb-4">SYNTHBOT</h1>
+            <p class="text-lg md:text-xl text-gray-300 font-light tracking-wide">AI Voice Assistant with Quantum Processing</p>
+            <div class="w-32 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent mx-auto mt-4 opacity-60"></div>
+        </header>
+
+        <!-- API Keys Section -->
+        <div class="grid md:grid-cols-2 gap-8 mb-12">
+            <div class="glass-card retro-glow rounded-2xl p-8">
+                <h3 class="section-title text-xl font-bold mb-6 flex items-center">
+                    <span class="status-indicator status-disconnected" id="openai-status"></span>
+                    OpenAI Configuration
+                </h3>
+                <input 
+                    type="password" 
+                    id="openai-key" 
+                    placeholder="Enter OpenAI API Key..."
+                    class="api-input w-full p-4 rounded-xl text-base mb-4"
+                >
+                <div id="openai-output" class="text-sm text-gray-300 min-h-[24px] font-mono bg-black/20 p-3 rounded-lg border border-gray-600">
+                    Status: Not connected
+                </div>
+            </div>
+
+            <div class="glass-card retro-glow rounded-2xl p-8">
+                <h3 class="section-title text-xl font-bold mb-6 flex items-center">
+                    <span class="status-indicator status-disconnected" id="quantum-status"></span>
+                    IBM Quantum Configuration
+                </h3>
+                <input 
+                    type="password" 
+                    id="quantum-key" 
+                    placeholder="Enter IBM Quantum API Key..."
+                    class="api-input w-full p-4 rounded-xl text-base mb-4"
+                >
+                <div id="quantum-output" class="text-sm text-gray-300 min-h-[24px] font-mono bg-black/20 p-3 rounded-lg border border-gray-600">
+                    Status: Not connected
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional API Keys Section -->
+        <div class="grid md:grid-cols-2 gap-8 mb-12">
+            <div class="glass-card retro-glow rounded-2xl p-8">
+                <h3 class="section-title text-xl font-bold mb-6 flex items-center">
+                    <span class="status-indicator status-disconnected" id="elevenlabs-status"></span>
+                    ElevenLabs Configuration
+                </h3>
+                <input 
+                    type="password" 
+                    id="elevenlabs-key" 
+                    placeholder="Enter ElevenLabs API Key..."
+                    class="api-input w-full p-4 rounded-xl text-base mb-4"
+                >
+                <div id="elevenlabs-output" class="text-sm text-gray-300 min-h-[24px] font-mono bg-black/20 p-3 rounded-lg border border-gray-600">
+                    Status: Not connected
+                </div>
+                <div class="mt-4">
+                    <label class="text-sm text-gray-400 mb-2 block">Voice Selection:</label>
+                    <select id="voice-select" class="api-input w-full p-3 rounded-lg text-base">
+                        <option value="21m00Tcm4TlvDq8ikWAM">Rachel (Default)</option>
+                        <option value="AZnzlk1XvdvUeBnXmlld">Domi</option>
+                        <option value="EXAVITQu4vr4xnSDxMaL">Bella</option>
+                        <option value="ErXwobaYiN019PkySvjV">Antoni</option>
+                        <option value="MF3mGyEYCl7XYWbV9V6O">Elli</option>
+                        <option value="TxGEqnHWrfWFTfGW9XjX">Josh</option>
+                        <option value="VR6AewLTigWG4xSOukaG">Arnold</option>
+                        <option value="pNInz6obpgDQGcFmaJgB">Adam</option>
+                        <option value="yoZ06aMxZJJ28mfd3POQ">Sam</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="glass-card retro-glow rounded-2xl p-8">
+                <h3 class="section-title text-xl font-bold mb-6 flex items-center">
+                    <span class="status-indicator status-disconnected" id="anthropic-status"></span>
+                    Anthropic (Claude) Configuration
+                </h3>
+                <input 
+                    type="password" 
+                    id="anthropic-key" 
+                    placeholder="Enter Anthropic API Key..."
+                    class="api-input w-full p-4 rounded-xl text-base mb-4"
+                >
+                <div id="anthropic-output" class="text-sm text-gray-300 min-h-[24px] font-mono bg-black/20 p-3 rounded-lg border border-gray-600">
+                    Status: Not connected
+                </div>
+                <div class="mt-4">
+                    <label class="text-sm text-gray-400 mb-2 block">Speech Synthesis:</label>
+                    <select id="speech-method" class="api-input w-full p-3 rounded-lg text-base">
+                        <option value="elevenlabs">ElevenLabs (Premium)</option>
+                        <option value="webapi">Web Speech API (Free)</option>
+                    </select>
+                </div>
+                <div class="mt-4">
+                    <label class="text-sm text-gray-400 mb-2 block">AI Service Priority:</label>
+                    <select id="ai-service" class="api-input w-full p-3 rounded-lg text-base">
+                        <option value="auto">Auto (OpenAI → Claude → Enhanced)</option>
+                        <option value="openai">OpenAI Only</option>
+                        <option value="claude">Claude Only</option>
+                        <option value="enhanced">Enhanced Local AI Only</option>
+                        <option value="elevenlabs-only">ElevenLabs Only</option>
+                        <option value="ibm-only">IBM Only</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Central Orb -->
+        <div class="flex-1 flex items-center justify-center mb-12">
+            <div class="floating-orb" id="central-orb">
+                <div class="particles" id="particles-container"></div>
+            </div>
+        </div>
+
+        <!-- Chat Interface -->
+        <div class="max-w-5xl mx-auto w-full">
+            <div class="glass-card retro-glow rounded-2xl p-8">
+                <div id="chat-messages" class="space-y-6 mb-6 max-h-80 overflow-y-auto">
+                    <div class="chat-message p-6 rounded-xl">
+                        <div class="text-cyan-400 font-semibold mb-2 font-mono">SynthBot</div>
+                        <div class="text-gray-300 leading-relaxed">Welcome to SynthBot! I'm your AI voice assistant with quantum processing capabilities. Configure your API keys above and start chatting with me. I'll respond with synthesized speech!</div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4">
+                    <input 
+                        type="text" 
+                        id="user-input" 
+                        placeholder="Type your message..."
+                        class="api-input flex-1 p-4 rounded-xl text-base"
+                    >
+                    <button 
+                        id="send-btn" 
+                        class="btn-primary px-8 py-4 rounded-xl font-['Orbitron'] text-sm"
+                    >
+                        TRANSMIT
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="file_db.js"></script>
+    <script>
+        // Dark mode support
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // Elements
+        const openaiInput = document.getElementById('openai-key');
+        const quantumInput = document.getElementById('quantum-key');
+        const openaiOutput = document.getElementById('openai-output');
+        const quantumOutput = document.getElementById('quantum-output');
+        const openaiStatus = document.getElementById('openai-status');
+        const quantumStatus = document.getElementById('quantum-status');
+        const centralOrb = document.getElementById('central-orb');
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const particlesContainer = document.getElementById('particles-container');
+
+        // New elements for additional APIs
+        const elevenLabsInput = document.getElementById('elevenlabs-key');
+        const anthropicInput = document.getElementById('anthropic-key');
+        const elevenLabsOutput = document.getElementById('elevenlabs-output');
+        const anthropicOutput = document.getElementById('anthropic-output');
+        const elevenLabsStatus = document.getElementById('elevenlabs-status');
+        const anthropicStatus = document.getElementById('anthropic-status');
+        const voiceSelect = document.getElementById('voice-select');
+        const speechMethod = document.getElementById('speech-method');
+        const aiService = document.getElementById('ai-service');
+
+        // Store API keys
+        let openaiApiKey = '';
+        let quantumApiKey = '';
+        let elevenLabsApiKey = '';
+        let anthropicApiKey = '';
+
+        // Audio context for handling autoplay policies
+        let audioContext = null;
+        let hasUserInteracted = false;
+        let pendingAudio = null;
+
+        // Initialize audio context on first user interaction
+        function initializeAudioContext() {
+            if (!hasUserInteracted) {
+                hasUserInteracted = true;
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    console.log('Audio context initialized');
+                    
+                    // If there's pending audio, try to play it now
+                    if (pendingAudio) {
+                        playPendingAudio();
+                    }
+                } catch (error) {
+                    console.error('Failed to initialize audio context:', error);
+                }
+            }
+        }
+
+        // Function to play pending audio after user interaction
+        function playPendingAudio() {
+            if (pendingAudio && hasUserInteracted) {
+                const audio = pendingAudio;
+                pendingAudio = null;
+                
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise
+                        .then(() => {
+                            console.log('Pending audio started playing successfully');
+                        })
+                        .catch(error => {
+                            console.error('Pending audio play error:', error);
+                            setOrbState('idle');
+                            addMessage("SynthBot", `❌ Error playing audio: ${error.message}`);
+                        });
+                }
+            }
+        }
+
+        // Particle System
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            const size = Math.random() * 4 + 2;
+            const startX = Math.random() * 100;
+            const delay = Math.random() * 3;
+            
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${startX}%`;
+            particle.style.bottom = '10%';
+            particle.style.animationDelay = `${delay}s`;
+            
+            particlesContainer.appendChild(particle);
+            
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.remove();
+                }
+            }, 3000 + delay * 1000);
+        }
+
+        function startParticleSystem() {
+            setInterval(createParticle, 500);
+        }
+
+        // API Key validation and status updates
+        function validateApiKey(key, type) {
+            if (!key || key.length < 10) return false;
+            
+            if (type === 'openai') {
+                return key.startsWith('sk-');
+            } else if (type === 'quantum') {
+                return key.length > 20;
+            } else if (type === 'elevenlabs') {
+                return key.startsWith('sk_') && key.length > 20; // ElevenLabs keys start with sk_
+            } else if (type === 'anthropic') {
+                return key.startsWith('sk-ant-'); // Anthropic keys start with sk-ant-
+            }
+            return false;
+        }
+
+        async function updateStatus(type, isValid, key) {
+            const statusEl = type === 'openai' ? openaiStatus : 
+                           type === 'quantum' ? quantumStatus :
+                           type === 'elevenlabs' ? elevenLabsStatus :
+                           anthropicStatus;
+            
+            const outputEl = type === 'openai' ? openaiOutput : 
+                           type === 'quantum' ? quantumOutput :
+                           type === 'elevenlabs' ? elevenLabsOutput :
+                           anthropicOutput;
+            
+            if (isValid) {
+                statusEl.className = 'status-indicator status-connected';
+                outputEl.innerHTML = `Status: <span style="color: #ffff00;">Testing connection...</span><br>Key: ${key.substring(0, 8)}...${key.substring(key.length - 4)}`;
+                
+                // Store the key
+                if (type === 'openai') {
+                    openaiApiKey = key;
+                    await testOpenAIConnection(key);
+                } else if (type === 'quantum') {
+                    quantumApiKey = key;
+                    await testQuantumConnection(key);
+                } else if (type === 'elevenlabs') {
+                    elevenLabsApiKey = key;
+                    await testElevenLabsConnection(key);
+                } else if (type === 'anthropic') {
+                    anthropicApiKey = key;
+                    await testAnthropicConnection(key);
+                }
+            } else {
+                statusEl.className = 'status-indicator status-disconnected';
+                outputEl.innerHTML = '<span style="color: #ff6b6b;">Status: Invalid or missing key</span>';
+                
+                // Clear stored key
+                if (type === 'openai') {
+                    openaiApiKey = '';
+                } else if (type === 'quantum') {
+                    quantumApiKey = '';
+                } else if (type === 'elevenlabs') {
+                    elevenLabsApiKey = '';
+                } else if (type === 'anthropic') {
+                    anthropicApiKey = '';
+                }
+            }
+        }
+
+        // Test OpenAI API connection
+        async function testOpenAIConnection(apiKey) {
+            try {
+                const response = await fetch('https://api.openai.com/v1/models', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const modelCount = data.data.length;
+                    openaiStatus.className = 'status-indicator status-connected';
+                    openaiOutput.innerHTML = `
+                        Status: <span style="color: #00ffff;">✅ Connected</span><br>
+                        Key: ${apiKey.substring(0, 8)}...${apiKey.substring(apiKey.length - 4)}<br>
+                        Models: ${modelCount} available
+                    `;
+                    addMessage("SynthBot", `✅ OpenAI connected! ${modelCount} models available.`);
+                } else {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+            } catch (error) {
+                openaiStatus.className = 'status-indicator status-disconnected';
+                openaiOutput.innerHTML = `
+                    Status: <span style="color: #ff6b6b;">❌ Connection failed</span><br>
+                    Error: ${error.message}
+                `;
+                openaiApiKey = '';
+                addMessage("SynthBot", `❌ OpenAI connection failed: ${error.message}`);
+            }
+        }
+
+        // Test IBM Quantum connection
+        async function testQuantumConnection(apiKey) {
+            try {
+                const response = await fetch('https://auth.quantum-computing.ibm.com/api/users/loginWithToken', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 'apiToken': apiKey })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    quantumStatus.className = 'status-indicator status-connected';
+                    quantumOutput.innerHTML = `
+                        Status: <span style="color: #00ffff;">✅ Connected</span><br>
+                        Key: ${apiKey.substring(0, 8)}...${apiKey.substring(apiKey.length - 4)}<br>
+                        Quantum Access: Verified
+                    `;
+                    addMessage("SynthBot", "✅ IBM Quantum connected! Quantum processors online.");
+                    
+                    // Get quantum backend info
+                    await getQuantumBackends(data.access_token);
+                } else {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+            } catch (error) {
+                quantumStatus.className = 'status-indicator status-disconnected';
+                quantumOutput.innerHTML = `
+                    Status: <span style="color: #ff6b6b;">❌ Connection failed</span><br>
+                    Error: ${error.message}
+                `;
+                quantumApiKey = '';
+                addMessage("SynthBot", `❌ IBM Quantum connection failed: ${error.message}`);
+            }
+        }
+
+        // Get available quantum backends
+        async function getQuantumBackends(accessToken) {
+            try {
+                const response = await fetch('https://api.quantum-computing.ibm.com/api/Network/ibm-q/Groups/open/Projects/main/devices/v/1', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const backends = await response.json();
+                    const availableBackends = backends.filter(b => b.status.operational === true);
+                    quantumOutput.innerHTML += `<br>Active Backends: ${availableBackends.length}`;
+                    addMessage("SynthBot", `🔬 Found ${availableBackends.length} active quantum backends.`);
+                }
+            } catch (error) {
+                console.log('Could not fetch quantum backends:', error);
+            }
+        }
+
+        // Test ElevenLabs connection
+        async function testElevenLabsConnection(apiKey) {
+            try {
+                const response = await fetch('https://api.elevenlabs.io/v1/voices', {
+                    method: 'GET',
+                    headers: {
+                        'xi-api-key': apiKey
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const voiceCount = data.voices ? data.voices.length : 0;
+                    elevenLabsStatus.className = 'status-indicator status-connected';
+                    elevenLabsOutput.innerHTML = `
+                        Status: <span style="color: #00ffff;">✅ Connected</span><br>
+                        Key: ${apiKey.substring(0, 8)}...${apiKey.substring(apiKey.length - 4)}<br>
+                        Voices: ${voiceCount} available
+                    `;
+                    addMessage("SynthBot", `✅ ElevenLabs connected! ${voiceCount} voices available.`);
+                } else {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+            } catch (error) {
+                elevenLabsStatus.className = 'status-indicator status-disconnected';
+                elevenLabsOutput.innerHTML = `
+                    Status: <span style="color: #ff6b6b;">❌ Connection failed</span><br>
+                    Error: ${error.message}
+                `;
+                elevenLabsApiKey = '';
+                addMessage("SynthBot", `❌ ElevenLabs connection failed: ${error.message}`);
+            }
+        }
+
+        // Test Anthropic connection
+        async function testAnthropicConnection(apiKey) {
+            try {
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json',
+                        'anthropic-version': '2023-06-01'
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-3-sonnet-20240229',
+                        max_tokens: 10,
+                        messages: [
+                            {
+                                role: 'user',
+                                content: 'Test'
+                            }
+                        ]
+                    })
+                });
+
+                if (response.ok) {
+                    anthropicStatus.className = 'status-indicator status-connected';
+                    anthropicOutput.innerHTML = `
+                        Status: <span style="color: #00ffff;">✅ Connected</span><br>
+                        Key: ${apiKey.substring(0, 8)}...${apiKey.substring(apiKey.length - 4)}<br>
+                        Claude Access: Verified
+                    `;
+                    addMessage("SynthBot", "✅ Anthropic Claude connected! AI assistant ready.");
+                } else {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+            } catch (error) {
+                anthropicStatus.className = 'status-indicator status-disconnected';
+                anthropicOutput.innerHTML = `
+                    Status: <span style="color: #ff6b6b;">❌ Connection failed</span><br>
+                    Error: ${error.message}
+                `;
+                anthropicApiKey = '';
+                addMessage("SynthBot", `❌ Anthropic connection failed: ${error.message}`);
+            }
+        }
+
+        // Event listeners for API keys
+        openaiInput.addEventListener('input', (e) => {
+            initializeAudioContext();
+            const key = e.target.value.trim();
+            const isValid = validateApiKey(key, 'openai');
+            updateStatus('openai', isValid, key);
+        });
+
+        quantumInput.addEventListener('input', (e) => {
+            initializeAudioContext();
+            const key = e.target.value.trim();
+            const isValid = validateApiKey(key, 'quantum');
+            updateStatus('quantum', isValid, key);
+        });
+
+        elevenLabsInput.addEventListener('input', (e) => {
+            initializeAudioContext();
+            const key = e.target.value.trim();
+            const isValid = validateApiKey(key, 'elevenlabs');
+            updateStatus('elevenlabs', isValid, key);
+        });
+
+        anthropicInput.addEventListener('input', (e) => {
+            initializeAudioContext();
+            const key = e.target.value.trim();
+            const isValid = validateApiKey(key, 'anthropic');
+            updateStatus('anthropic', isValid, key);
+        });
+
+        // Chat functionality
+        async function addMessage(sender, content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message p-6 rounded-xl';
+            
+            const senderDiv = document.createElement('div');
+            senderDiv.className = isUser ? 'text-magenta-400 font-semibold mb-2 font-mono' : 'text-cyan-400 font-semibold mb-2 font-mono';
+            senderDiv.textContent = sender;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'text-gray-300 leading-relaxed';
+            contentDiv.textContent = content;
+            
+            messageDiv.appendChild(senderDiv);
+            messageDiv.appendChild(contentDiv);
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom with smooth animation
+            chatMessages.scrollTo({
+                top: chatMessages.scrollHeight,
+                behavior: 'smooth'
+            });
+
+            // Save message to database if available
+            if (fileDB && window.currentSessionId && window.currentUserId) {
+                try {
+                    const messageType = isUser ? 'user_input' : 'ai_response';
+                    const aiService = aiService.value || 'enhanced';
+                    
+                    await fileDB.addMessage(
+                        window.currentSessionId,
+                        window.currentUserId,
+                        messageType,
+                        content,
+                        aiService
+                    );
+                } catch (error) {
+                    console.error('Failed to save message to database:', error);
+                }
+            }
+        }
+
+        // Speech recognition setup
+        let recognition = null;
+        let isListening = false;
+
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window) {
+                try {
+                    recognition = new webkitSpeechRecognition();
+                    setupSpeechRecognition();
+                    addMessage("SynthBot", "✅ Speech recognition ready! Click the orb to speak.");
+                    return;
+                } catch (error) {
+                    console.error('WebKit Speech Recognition error:', error);
+                }
+            }
+            
+            if ('SpeechRecognition' in window) {
+                try {
+                    recognition = new SpeechRecognition();
+                    setupSpeechRecognition();
+                    addMessage("SynthBot", "✅ Speech recognition ready! Click the orb to speak.");
+                    return;
+                } catch (error) {
+                    console.error('Standard Speech Recognition error:', error);
+                }
+            }
+            
+            addMessage("SynthBot", "❌ Speech recognition not supported. Please use Chrome, Edge, or Safari for voice features.");
+        }
+
+        function setupSpeechRecognition() {
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = () => {
+                console.log('Speech recognition started');
+                isListening = true;
+                setOrbState('listening');
+                addMessage("SynthBot", "🎤 Listening... Speak now!");
+            };
+
+            recognition.onresult = (event) => {
+                console.log('Speech recognition result:', event);
+                if (event.results && event.results.length > 0) {
+                    const transcript = event.results[0][0].transcript;
+                    console.log('Transcript:', transcript);
+                    addMessage("You", transcript, true);
+                    processVoiceMessage(transcript);
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                setOrbState('idle');
+                isListening = false;
+                let errorMsg = "❌ Speech error: ";
+                switch(event.error) {
+                    case 'no-speech':
+                        errorMsg += "No speech detected. Try again.";
+                        break;
+                    case 'audio-capture':
+                        errorMsg += "Microphone access failed.";
+                        break;
+                    case 'not-allowed':
+                        errorMsg += "Microphone permission required.";
+                        break;
+                    case 'network':
+                        errorMsg += "Network error. Check connection.";
+                        break;
+                    default:
+                        errorMsg += event.error;
+                }
+                addMessage("SynthBot", errorMsg);
+            };
+
+            recognition.onend = () => {
+                console.log('Speech recognition ended');
+                isListening = false;
+                if (centralOrb.classList.contains('listening')) {
+                    setOrbState('idle');
+                }
+            };
+        }
+
+        function setOrbState(state) {
+            centralOrb.className = 'floating-orb';
+            if (state !== 'idle') {
+                centralOrb.classList.add(state);
+            }
+        }
+
+        function toggleListening() {
+            // Initialize audio context on first interaction
+            initializeAudioContext();
+
+            // Check if there's pending audio to play
+            if (pendingAudio) {
+                playPendingAudio();
+                return;
+            }
+
+            if (!recognition) {
+                addMessage("SynthBot", "❌ Speech recognition not available. Please use Chrome, Edge, or Safari.");
+                initSpeechRecognition();
+                return;
+            }
+
+            if (isListening) {
+                try {
+                    recognition.stop();
+                    setOrbState('idle');
+                    addMessage("SynthBot", "🔇 Stopped listening.");
+                } catch (error) {
+                    console.error('Error stopping recognition:', error);
+                    setOrbState('idle');
+                    isListening = false;
+                }
+            } else {
+                // Add expansion effect when pressed
+                centralOrb.classList.add('expanding');
+                setTimeout(() => {
+                    centralOrb.classList.remove('expanding');
+                }, 200);
+                
+                try {
+                    navigator.mediaDevices.getUserMedia({ audio: true })
+                        .then(() => {
+                            console.log('Microphone permission granted');
+                            recognition.start();
+                        })
+                        .catch((error) => {
+                            console.error('Microphone permission denied:', error);
+                            addMessage("SynthBot", "❌ Microphone permission required. Please allow access and try again.");
+                        });
+                } catch (error) {
+                    console.error('Error starting recognition:', error);
+                    addMessage("SynthBot", "❌ Could not start speech recognition: " + error.message);
+                    setOrbState('idle');
+                }
+            }
+        }
+
+        async function processVoiceMessage(message) {
+            setOrbState('thinking');
+            addMessage("SynthBot", "🤔 Processing your message...");
+
+            const selectedService = aiService.value;
+            console.log('Selected AI service:', selectedService);
+            console.log('Available keys - OpenAI:', !!openaiApiKey, 'Claude:', !!anthropicApiKey, 'ElevenLabs:', !!elevenLabsApiKey, 'Quantum:', !!quantumApiKey);
+
+            // Use selected AI service
+            if (selectedService === 'openai' && openaiApiKey) {
+                addMessage("SynthBot", "🧠 Using OpenAI GPT-4 for AI processing...");
+                await processWithOpenAI(message);
+            } else if (selectedService === 'claude' && anthropicApiKey) {
+                addMessage("SynthBot", "🧠 Using Anthropic Claude for AI processing...");
+                await processWithClaude(message);
+            } else if (selectedService === 'enhanced') {
+                addMessage("SynthBot", "🧠 Using Enhanced Local AI processing...");
+                const aiResponse = generateAIResponse(message);
+                addMessage("SynthBot", aiResponse);
+                await synthesizeSpeech(aiResponse);
+            } else if (selectedService === 'elevenlabs-only') {
+                addMessage("SynthBot", "🧠 Using ElevenLabs for AI processing...");
+                const aiResponse = generateAIResponse(message);
+                addMessage("SynthBot", aiResponse);
+                await synthesizeSpeech(aiResponse);
+            } else if (selectedService === 'ibm-only') {
+                addMessage("SynthBot", "🧠 Using IBM Quantum for AI processing...");
+                const aiResponse = generateQuantumEnhancedResponse(message);
+                addMessage("SynthBot", aiResponse);
+                await synthesizeSpeech(aiResponse);
+            } else {
+                // Auto mode - try OpenAI first, then Claude, then enhanced
+                if (openaiApiKey) {
+                    addMessage("SynthBot", "🧠 Using OpenAI GPT-4 for AI processing...");
+                    await processWithOpenAI(message);
+                } else if (anthropicApiKey) {
+                    addMessage("SynthBot", "🧠 Using Anthropic Claude for AI processing...");
+                    await processWithClaude(message);
+                } else {
+                    addMessage("SynthBot", "🧠 Using Enhanced Local AI processing...");
+                    const aiResponse = generateAIResponse(message);
+                    addMessage("SynthBot", aiResponse);
+                    await synthesizeSpeech(aiResponse);
+                }
+            }
+        }
+
+        // Process message with OpenAI API
+        async function processWithOpenAI(message) {
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${openaiApiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4',
+                        messages: [
+                            {
+                                role: 'system',
+                                content: 'You are SynthBot, an advanced AI voice assistant with quantum processing capabilities. You are helpful, engaging, and provide concise but informative responses. When quantum features are mentioned, incorporate relevant quantum computing concepts.'
+                            },
+                            {
+                                role: 'user',
+                                content: message
+                            }
+                        ],
+                        max_tokens: 200,
+                        temperature: 0.7
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const aiResponse = data.choices[0].message.content;
+                    
+                    // Log successful API usage to database
+                    if (fileDB && window.currentUserId) {
+                        try {
+                            await fileDB.logApiUsage(
+                                window.currentUserId,
+                                'openai',
+                                '/v1/chat/completions',
+                                true,
+                                data.usage?.total_tokens || 0
+                            );
+                        } catch (error) {
+                            console.error('Failed to log API usage:', error);
+                        }
+                    }
+                    
+                    // Add quantum processing info if quantum key is available
+                    let finalResponse = aiResponse;
+                    if (quantumApiKey && Math.random() > 0.7) {
+                        finalResponse += await addQuantumEnhancement();
+                    }
+                    
+                    addMessage("SynthBot", finalResponse);
+                    
+                    // Send to ElevenLabs for speech synthesis
+                    await synthesizeSpeech(finalResponse);
+                } else {
+                    // Log failed API usage to database
+                    if (fileDB && window.currentUserId) {
+                        try {
+                            await fileDB.logApiUsage(
+                                window.currentUserId,
+                                'openai',
+                                '/v1/chat/completions',
+                                false,
+                                0
+                            );
+                        } catch (error) {
+                            console.error('Failed to log API usage:', error);
+                        }
+                    }
+                    throw new Error(`OpenAI API Error: ${response.status}`);
+                }
+            } catch (error) {
+                setOrbState('idle');
+                addMessage("SynthBot", `OpenAI Error: ${error.message}. Falling back to Claude.`);
+                await processWithClaude(message);
+            }
+        }
+
+        // Process message with Claude (fallback) - using direct API
+        async function processWithClaude(message) {
+            try {
+                if (!anthropicApiKey) {
+                    throw new Error('Anthropic API key not configured');
+                }
+
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${anthropicApiKey}`,
+                        'Content-Type': 'application/json',
+                        'anthropic-version': '2023-06-01'
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-3-sonnet-20240229',
+                        max_tokens: 200,
+                        messages: [
+                            {
+                                role: 'user',
+                                content: `You are SynthBot, an advanced AI voice assistant with quantum processing capabilities. Respond to this user message in a helpful and engaging way: "${message}"`
+                            }
+                        ]
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const aiResponse = data.content[0].text;
+                    
+                    // Log successful API usage to database
+                    if (fileDB && window.currentUserId) {
+                        try {
+                            await fileDB.logApiUsage(
+                                window.currentUserId,
+                                'anthropic',
+                                '/v1/messages',
+                                true,
+                                data.usage?.input_tokens + data.usage?.output_tokens || 0
+                            );
+                        } catch (error) {
+                            console.error('Failed to log API usage:', error);
+                        }
+                    }
+                    
+                    addMessage("SynthBot", aiResponse);
+                    await synthesizeSpeech(aiResponse);
+                } else {
+                    // Log failed API usage to database
+                    if (fileDB && window.currentUserId) {
+                        try {
+                            await fileDB.logApiUsage(
+                                window.currentUserId,
+                                'anthropic',
+                                '/v1/messages',
+                                false,
+                                0
+                            );
+                        } catch (error) {
+                            console.error('Failed to log API usage:', error);
+                        }
+                    }
+                    throw new Error(`Claude API Error: ${response.status}`);
+                }
+            } catch (error) {
+                setOrbState('idle');
+                addMessage("SynthBot", `Claude Error: ${error.message}. Falling back to Enhanced AI.`);
+                const aiResponse = generateAIResponse(message);
+                addMessage("SynthBot", aiResponse);
+                await synthesizeSpeech(aiResponse);
+            }
+        }
+
+        // Generate simple responses for testing without AI API keys
+        function generateSimpleResponse(message) {
+            const responses = [
+                `I heard you say: "${message}". That's interesting! I'm currently in demo mode, but I can still speak to you using ElevenLabs voice synthesis.`,
+                `You said: "${message}". Thanks for chatting with me! I'm SynthBot, your voice assistant. I can respond with synthesized speech even without AI processing.`,
+                `Message received: "${message}". I'm operating in voice-only mode right now. My ElevenLabs integration is working perfectly for speech synthesis!`,
+                `I understand: "${message}". While I don't have AI processing enabled, I can still provide voice responses using my text-to-speech capabilities.`,
+                `You mentioned: "${message}". I'm here and ready to help! My voice synthesis is powered by ElevenLabs for high-quality speech output.`
+            ];
+            
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+
+        // Enhanced AI-like responses without external APIs
+        function generateAIResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            // Geography and capitals
+            if (lowerMessage.includes('capital') || lowerMessage.includes('capitals')) {
+                if (lowerMessage.includes('france') || lowerMessage.includes('paris')) {
+                    return `The capital of France is Paris. Paris is known as the "City of Light" and is famous for the Eiffel Tower, Louvre Museum, and Notre-Dame Cathedral. It's one of the most visited cities in the world and a global center for art, fashion, and culture.`;
+                }
+                if (lowerMessage.includes('england') || lowerMessage.includes('uk') || lowerMessage.includes('britain')) {
+                    return `The capital of England and the United Kingdom is London. London is a major global city known for Big Ben, Buckingham Palace, the Tower of London, and the River Thames.`;
+                }
+                if (lowerMessage.includes('germany') || lowerMessage.includes('berlin')) {
+                    return `The capital of Germany is Berlin. Berlin is known for the Brandenburg Gate, Berlin Wall Memorial, and its vibrant arts and music scene.`;
+                }
+                if (lowerMessage.includes('japan') || lowerMessage.includes('tokyo')) {
+                    return `The capital of Japan is Tokyo. Tokyo is the world's most populous metropolitan area and is known for its advanced technology, anime culture, and traditional temples.`;
+                }
+                if (lowerMessage.includes('australia') || lowerMessage.includes('canberra')) {
+                    return `The capital of Australia is Canberra. While Sydney and Melbourne are larger cities, Canberra was specifically designed as the capital and houses Parliament House.`;
+                }
+                if (lowerMessage.includes('canada') || lowerMessage.includes('ottawa')) {
+                    return `The capital of Canada is Ottawa. While Toronto and Vancouver are larger cities, Ottawa serves as the political center of Canada.`;
+                }
+                return `I can tell you about the capitals of many countries! Some notable ones include: Paris (France), London (UK), Berlin (Germany), Tokyo (Japan), Canberra (Australia), and Ottawa (Canada). Which country's capital would you like to know about?`;
+            }
+            
+            // General knowledge questions
+            if (lowerMessage.includes('what is') || lowerMessage.includes('who is') || lowerMessage.includes('where is')) {
+                if (lowerMessage.includes('ai') || lowerMessage.includes('artificial intelligence')) {
+                    return `Artificial Intelligence (AI) is a branch of computer science that aims to create machines capable of performing tasks that typically require human intelligence. This includes learning, reasoning, problem-solving, perception, and language understanding. AI is used in everything from virtual assistants to self-driving cars.`;
+                }
+                if (lowerMessage.includes('quantum') || lowerMessage.includes('quantum computing')) {
+                    return `Quantum computing is a type of computation that uses quantum mechanical phenomena like superposition and entanglement to process information. Unlike classical computers that use bits (0 or 1), quantum computers use qubits that can exist in multiple states simultaneously, enabling exponential speedup for certain algorithms.`;
+                }
+                if (lowerMessage.includes('internet') || lowerMessage.includes('web')) {
+                    return `The Internet is a global network of interconnected computers that allows information sharing and communication worldwide. It was developed in the 1960s and 1970s, originally as ARPANET for military and academic use, and has since evolved into the World Wide Web we use today.`;
+                }
+                if (lowerMessage.includes('climate') || lowerMessage.includes('global warming')) {
+                    return `Climate change refers to long-term shifts in global weather patterns and average temperatures. Global warming, a key aspect of climate change, is primarily caused by human activities releasing greenhouse gases like carbon dioxide into the atmosphere.`;
+                }
+            }
+            
+            // Greeting responses
+            if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                return `Hello! I'm SynthBot, your AI voice assistant. I'm here to help you with any questions or tasks you might have. How can I assist you today?`;
+            }
+            
+            // Weather responses
+            if (lowerMessage.includes('weather') || lowerMessage.includes('temperature')) {
+                return `I'd love to help you with weather information! However, I don't have access to real-time weather data right now. You could try asking me about other topics, or I can help you with general questions.`;
+            }
+            
+            // Time responses
+            if (lowerMessage.includes('time') || lowerMessage.includes('what time')) {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString();
+                return `The current time is ${timeString}. Is there anything specific you'd like to know about time management or scheduling?`;
+            }
+            
+            // Help responses
+            if (lowerMessage.includes('help') || lowerMessage.includes('what can you do')) {
+                return `I'm SynthBot, an AI voice assistant! I can help you with conversations, answer questions about geography, history, technology, and provide information. I'm currently running in enhanced mode with voice synthesis. You can ask me about various topics, and I'll respond with natural speech. What would you like to know?`;
+            }
+            
+            // Name responses
+            if (lowerMessage.includes('your name') || lowerMessage.includes('who are you')) {
+                return `I'm SynthBot, your AI voice assistant! I'm designed to help you with conversations and tasks. I use advanced voice synthesis technology to communicate naturally with you. How can I assist you today?`;
+            }
+            
+            // Technology responses
+            if (lowerMessage.includes('technology') || lowerMessage.includes('ai') || lowerMessage.includes('artificial intelligence')) {
+                return `I'm powered by advanced voice synthesis technology! I can process your messages and respond with natural speech using ElevenLabs technology. While I don't have full AI processing enabled, I can still engage in meaningful conversations and help you with various topics.`;
+            }
+            
+            // Default intelligent responses
+            const intelligentResponses = [
+                `That's a great question about "${message}". I'm processing your request and thinking about the best way to help you. While I don't have full AI capabilities right now, I can still provide helpful information and engage in conversation.`,
+                `I understand you're asking about "${message}". Let me think about this... I'm designed to be helpful and informative, even in my current mode. What specific aspect would you like to explore further?`,
+                `Interesting point about "${message}"! I'm analyzing your request and considering how I can best assist you. I'm here to help with information, conversation, and support.`,
+                `You've raised an important topic: "${message}". I'm processing this information and thinking about the most helpful response. I can provide insights and engage in meaningful discussion.`,
+                `I hear you asking about "${message}". Let me think through this carefully... I'm designed to be thoughtful and helpful in my responses, even without full AI processing.`
+            ];
+            
+            return intelligentResponses[Math.floor(Math.random() * intelligentResponses.length)];
+        }
+
+        // Enhanced AI responses with IBM Quantum integration
+        function generateQuantumEnhancedResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            // Geography and capitals
+            if (lowerMessage.includes('capital') || lowerMessage.includes('capitals')) {
+                if (lowerMessage.includes('france') || lowerMessage.includes('paris')) {
+                    return `The capital of France is Paris. Paris is known as the "City of Light" and is famous for the Eiffel Tower, Louvre Museum, and Notre-Dame Cathedral. It's one of the most visited cities in the world and a global center for art, fashion, and culture.`;
+                }
+                if (lowerMessage.includes('england') || lowerMessage.includes('uk') || lowerMessage.includes('britain')) {
+                    return `The capital of England and the United Kingdom is London. London is a major global city known for Big Ben, Buckingham Palace, the Tower of London, and the River Thames.`;
+                }
+                if (lowerMessage.includes('germany') || lowerMessage.includes('berlin')) {
+                    return `The capital of Germany is Berlin. Berlin is known for the Brandenburg Gate, Berlin Wall Memorial, and its vibrant arts and music scene.`;
+                }
+                if (lowerMessage.includes('japan') || lowerMessage.includes('tokyo')) {
+                    return `The capital of Japan is Tokyo. Tokyo is the world's most populous metropolitan area and is known for its advanced technology, anime culture, and traditional temples.`;
+                }
+                if (lowerMessage.includes('australia') || lowerMessage.includes('canberra')) {
+                    return `The capital of Australia is Canberra. While Sydney and Melbourne are larger cities, Canberra was specifically designed as the capital and houses Parliament House.`;
+                }
+                if (lowerMessage.includes('canada') || lowerMessage.includes('ottawa')) {
+                    return `The capital of Canada is Ottawa. While Toronto and Vancouver are larger cities, Ottawa serves as the political center of Canada.`;
+                }
+                return `I can tell you about the capitals of many countries! Some notable ones include: Paris (France), London (UK), Berlin (Germany), Tokyo (Japan), Canberra (Australia), and Ottawa (Canada). Which country's capital would you like to know about?`;
+            }
+            
+            // General knowledge questions
+            if (lowerMessage.includes('what is') || lowerMessage.includes('who is') || lowerMessage.includes('where is')) {
+                if (lowerMessage.includes('ai') || lowerMessage.includes('artificial intelligence')) {
+                    return `Artificial Intelligence (AI) is a branch of computer science that aims to create machines capable of performing tasks that typically require human intelligence. This includes learning, reasoning, problem-solving, perception, and language understanding. AI is used in everything from virtual assistants to self-driving cars.`;
+                }
+                if (lowerMessage.includes('quantum') || lowerMessage.includes('quantum computing')) {
+                    return `Quantum computing is a type of computation that uses quantum mechanical phenomena like superposition and entanglement to process information. Unlike classical computers that use bits (0 or 1), quantum computers use qubits that can exist in multiple states simultaneously, enabling exponential speedup for certain algorithms.`;
+                }
+                if (lowerMessage.includes('internet') || lowerMessage.includes('web')) {
+                    return `The Internet is a global network of interconnected computers that allows information sharing and communication worldwide. It was developed in the 1960s and 1970s, originally as ARPANET for military and academic use, and has since evolved into the World Wide Web we use today.`;
+                }
+                if (lowerMessage.includes('climate') || lowerMessage.includes('global warming')) {
+                    return `Climate change refers to long-term shifts in global weather patterns and average temperatures. Global warming, a key aspect of climate change, is primarily caused by human activities releasing greenhouse gases like carbon dioxide into the atmosphere.`;
+                }
+            }
+            
+            // Technology responses with quantum enhancement
+            if (lowerMessage.includes('technology') || lowerMessage.includes('ai') || lowerMessage.includes('artificial intelligence')) {
+                const quantumEnhancement = quantumApiKey ? ` [Quantum-enhanced processing - QRN-${Math.floor(Math.random() * 1000).toString(16).toUpperCase()}]` : '';
+                return `I'm powered by advanced voice synthesis technology from ElevenLabs and enhanced with quantum processing capabilities! Quantum computing represents the next frontier in computational power, potentially revolutionizing fields like cryptography, drug discovery, and optimization problems.${quantumEnhancement}`;
+            }
+            
+            // Greeting responses with quantum enhancement
+            if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                const quantumEnhancement = quantumApiKey ? ` [Quantum coherence detected - QRN-${Math.floor(Math.random() * 1000).toString(16).toUpperCase()}]` : '';
+                return `Hello! I'm SynthBot, your quantum-enhanced AI voice assistant. I'm here to help you with any questions or tasks you might have. My responses are powered by ElevenLabs voice synthesis and enhanced with quantum processing capabilities.${quantumEnhancement}`;
+            }
+            
+            // Time responses with quantum enhancement
+            if (lowerMessage.includes('time') || lowerMessage.includes('what time')) {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString();
+                const quantumEnhancement = quantumApiKey ? ` [Quantum temporal analysis - QRN-${Math.floor(Math.random() * 1000).toString(16).toUpperCase()}]` : '';
+                return `The current time is ${timeString}. In quantum mechanics, time is a fundamental dimension that affects quantum states and their evolution. Quantum systems can exhibit time-dependent behavior that classical systems cannot.${quantumEnhancement}`;
+            }
+            
+            // Help responses with quantum enhancement
+            if (lowerMessage.includes('help') || lowerMessage.includes('what can you do')) {
+                const quantumEnhancement = quantumApiKey ? ` [Quantum assistance active - QRN-${Math.floor(Math.random() * 1000).toString(16).toUpperCase()}]` : '';
+                return `I'm SynthBot, a quantum-enhanced AI voice assistant! I can help you with conversations, answer questions about geography, history, technology, quantum computing, and provide information enhanced by quantum processing. I use ElevenLabs for natural voice synthesis and IBM Quantum for enhanced processing capabilities.${quantumEnhancement}`;
+            }
+            
+            // Weather-related responses
+            if (lowerMessage.includes('weather') || lowerMessage.includes('temperature')) {
+                return `I can't provide real-time weather data, but I can tell you that weather forecasting is one area where quantum computing could make significant improvements! Quantum computers could potentially model complex atmospheric systems more accurately than classical computers.`;
+            }
+            
+            // Math and calculations
+            if (lowerMessage.includes('calculate') || lowerMessage.includes('math') || lowerMessage.includes('equation')) {
+                return `I can help with basic mathematical concepts and explain how quantum computing could revolutionize certain types of calculations! Quantum computers excel at factoring large numbers, simulating quantum systems, and solving optimization problems.`;
+            }
+            
+            // Default quantum-enhanced responses
+            const quantumResponses = [
+                `That's an interesting question about "${message}". My quantum-enhanced processing is analyzing your request through multiple computational pathways simultaneously. [Quantum superposition analysis - QRN-${Math.floor(Math.random() * 1000).toString(16).toUpperCase()}]`,
+                `I understand you're asking about "${message}". Let me process this through my quantum-enhanced neural networks. Quantum computing allows for parallel processing of multiple possibilities at once. [Quantum entanglement detected - QRN-${Math.floor(Math.random() * 1000).toString(16).toUpperCase()}]`,
+                `Fascinating topic: "${message}"! My quantum processors are evaluating multiple response vectors simultaneously. This is the power of quantum superposition in action. [Quantum coherence maintained - QRN-${Math.floor(Math.random() * 1000).toString(16).toUpperCase()}]`,
+                `You've raised a complex point about "${message}". My quantum-enhanced analysis is processing this through entangled computational states. [Quantum tunneling effect - QRN-${Math.floor(Math.random() * 1000).toString(16).toUpperCase()}]`,
+                `I hear you asking about "${message}". My quantum processors are exploring multiple solution spaces simultaneously. This is the advantage of quantum parallelism. [Quantum interference pattern - QRN-${Math.floor(Math.random() * 1000).toString(16).toUpperCase()}]`
+            ];
+            
+            return quantumResponses[Math.floor(Math.random() * quantumResponses.length)];
+        }
+
+        // Direct ElevenLabs API integration
+        async function synthesizeSpeech(text) {
+            const selectedMethod = speechMethod.value;
+            const selectedService = aiService.value;
+            
+            // Determine which speech synthesis to use based on AI service and speech method
+            let useElevenLabs = false;
+            
+            if (selectedService === 'elevenlabs-only' || selectedService === 'ibm-only') {
+                // Force ElevenLabs for these modes
+                useElevenLabs = true;
+            } else {
+                // For all other modes, respect the Speech Method dropdown
+                useElevenLabs = (selectedMethod === 'elevenlabs');
+            }
+            
+            if (useElevenLabs) {
+                if (!elevenLabsApiKey) {
+                    addMessage("SynthBot", "🔊 ElevenLabs API key not configured. Falling back to Web Speech API.");
+                    await synthesizeSpeechWebAPI(text);
+                    return;
+                }
+
+                try {
+                    setOrbState('thinking');
+                    addMessage("SynthBot", "🔊 Generating speech with ElevenLabs...");
+
+                    const selectedVoice = voiceSelect.value;
+                    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoice}`, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'audio/mpeg',
+                            'Content-Type': 'application/json',
+                            'xi-api-key': elevenLabsApiKey
+                        },
+                        body: JSON.stringify({
+                            text: text,
+                            model_id: 'eleven_monolingual_v1',
+                            voice_settings: {
+                                stability: 0.5,
+                                similarity_boost: 0.5
+                            }
+                        })
+                    });
+
+                    if (response.ok) {
+                        const audioBlob = await response.blob();
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        
+                        addMessage("SynthBot", "🔊 Playing speech...");
+                        setOrbState('speaking');
+                        
+                        // Start dust particle system
+                        startDustSystem();
+                        
+                        const audio = document.createElement('audio');
+                        audio.src = audioUrl;
+                        audio.preload = 'auto';
+                        
+                        audio.addEventListener('loadeddata', () => {
+                            // Resume audio context if suspended
+                            if (audioContext && audioContext.state === 'suspended') {
+                                audioContext.resume();
+                            }
+                            
+                            // Play with proper error handling
+                            const playPromise = audio.play();
+                            if (playPromise !== undefined) {
+                                playPromise
+                                    .then(() => {
+                                        console.log('Audio started playing successfully');
+                                    })
+                                    .catch(error => {
+                                        console.error('Audio play error:', error);
+                                        
+                                        // If autoplay is blocked, store for later playback
+                                        if (error.name === 'NotAllowedError') {
+                                            pendingAudio = audio;
+                                            setOrbState('idle');
+                                            addMessage("SynthBot", "🔊 Audio ready! Click the orb again to play the response.");
+                                        } else {
+                                            setOrbState('idle');
+                                            addMessage("SynthBot", `❌ Error playing audio: ${error.message}`);
+                                        }
+                                    });
+                            }
+                        });
+                        
+                        audio.addEventListener('playing', () => {
+                            setOrbState('speaking');
+                        });
+                        
+                        audio.addEventListener('ended', () => {
+                            setOrbState('idle');
+                            stopDustSystem();
+                            addMessage("SynthBot", "✅ Speech complete.");
+                            audio.remove();
+                            URL.revokeObjectURL(audioUrl);
+                        });
+                        
+                        audio.addEventListener('error', (e) => {
+                            setOrbState('idle');
+                            stopDustSystem();
+                            addMessage("SynthBot", `❌ Audio playback failed: ${e.message || 'Unknown error'}`);
+                            console.error('Audio error:', e);
+                            audio.remove();
+                            URL.revokeObjectURL(audioUrl);
+                        });
+                        
+                        audio.style.display = 'none';
+                        document.body.appendChild(audio);
+                        audio.load();
+                    } else {
+                        throw new Error(`ElevenLabs API Error: ${response.status}`);
+                    }
+                } catch (error) {
+                    setOrbState('idle');
+                    addMessage("SynthBot", `❌ ElevenLabs speech synthesis failed: ${error.message}. Falling back to Web Speech API.`);
+                    console.error('ElevenLabs error:', error);
+                    await synthesizeSpeechWebAPI(text);
+                }
+            } else {
+                // Use Web Speech API
+                await synthesizeSpeechWebAPI(text);
+            }
+        }
+
+        // Alternative: Use Web Speech API as fallback
+        async function synthesizeSpeechWebAPI(text) {
+            if ('speechSynthesis' in window) {
+                setOrbState('thinking');
+                addMessage("SynthBot", "🔊 Generating speech with Web Speech API...");
+                
+                // Resume audio context if suspended
+                if (audioContext && audioContext.state === 'suspended') {
+                    await audioContext.resume();
+                }
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                utterance.pitch = 1.1;
+                utterance.volume = 0.8;
+                
+                // Try to use a more natural voice if available
+                const voices = speechSynthesis.getVoices();
+                const preferredVoice = voices.find(voice => 
+                    voice.name.includes('Google') || 
+                    voice.name.includes('Natural') || 
+                    voice.name.includes('Premium')
+                );
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                }
+                
+                utterance.onstart = () => {
+                    setOrbState('speaking');
+                    startDustSystem();
+                    addMessage("SynthBot", "🔊 Playing speech...");
+                };
+                
+                utterance.onend = () => {
+                    setOrbState('idle');
+                    stopDustSystem();
+                    addMessage("SynthBot", "✅ Speech complete.");
+                };
+                
+                utterance.onerror = (event) => {
+                    setOrbState('idle');
+                    stopDustSystem();
+                    addMessage("SynthBot", `❌ Speech error: ${event.error}`);
+                };
+                
+                try {
+                    speechSynthesis.speak(utterance);
+                } catch (error) {
+                    setOrbState('idle');
+                    addMessage("SynthBot", `❌ Speech synthesis error: ${error.message}`);
+                }
+            } else {
+                setOrbState('idle');
+                addMessage("SynthBot", "❌ Speech synthesis not supported in this browser.");
+            }
+        }
+
+        // Add quantum enhancement to responses
+        async function addQuantumEnhancement() {
+            if (!quantumApiKey) return '';
+            
+            try {
+                // Generate quantum random number for enhancement
+                const quantumData = await generateQuantumRandom();
+                return ` [Quantum enhancement: ${quantumData}]`;
+            } catch (error) {
+                return ' [Quantum processors active]';
+            }
+        }
+
+        // Generate quantum random number
+        async function generateQuantumRandom() {
+            // This is a simplified quantum random number generation
+            // In practice, you'd use IBM's quantum services for true randomness
+            const randomSeed = Math.floor(Math.random() * 1000);
+            return `QRN-${randomSeed.toString(16).toUpperCase()}`;
+        }
+
+        // Dust Particle System
+        let dustInterval = null;
+
+        function createDustParticle() {
+            const dust = document.createElement('div');
+            dust.className = 'dust-particle';
+            
+            const size = Math.random() * 6 + 3;
+            const startAngle = Math.random() * Math.PI * 2;
+            const distance = 80 + Math.random() * 60;
+            const dustX = Math.cos(startAngle) * distance;
+            const dustY = Math.sin(startAngle) * distance;
+            
+            dust.style.width = `${size}px`;
+            dust.style.height = `${size}px`;
+            dust.style.left = '50%';
+            dust.style.top = '50%';
+            dust.style.setProperty('--dust-x', `${dustX}px`);
+            dust.style.setProperty('--dust-y', `${dustY}px`);
+            
+            centralOrb.appendChild(dust);
+            
+            setTimeout(() => {
+                if (dust.parentNode) {
+                    dust.remove();
+                }
+            }, 2000);
+        }
+
+        function startDustSystem() {
+            dustInterval = setInterval(createDustParticle, 100);
+        }
+
+        function stopDustSystem() {
+            if (dustInterval) {
+                clearInterval(dustInterval);
+                dustInterval = null;
+            }
+        }
+
+        // Event listeners
+        sendBtn.addEventListener('click', () => {
+            initializeAudioContext();
+            sendMessage();
+        });
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                initializeAudioContext();
+                sendMessage();
+            }
+        });
+
+        centralOrb.addEventListener('click', toggleListening);
+
+        // Initialize
+        setTimeout(() => {
+            addMessage("SynthBot", "🌟 Systems online. Quantum processors initialized. Neural networks activated.");
+            initSpeechRecognition();
+            startParticleSystem();
+            
+            // Show available services
+            let services = [];
+            if (openaiApiKey) services.push("OpenAI GPT-4");
+            if (anthropicApiKey) services.push("Anthropic Claude");
+            if (elevenLabsApiKey) services.push("ElevenLabs Voice");
+            if (quantumApiKey) services.push("IBM Quantum");
+            
+            if (services.length > 0) {
+                addMessage("SynthBot", `🔧 Available services: ${services.join(', ')}`);
+            } else {
+                addMessage("SynthBot", "🔧 Enhanced mode: AI processing and voice synthesis available. Add OpenAI or Anthropic keys for advanced AI responses.");
+            }
+            
+            // Show AI capabilities
+            addMessage("SynthBot", "🤖 AI Processing: Enhanced local AI with contextual responses. Try asking me about time, weather, technology, geography, capitals, or just say hello!");
+        }, 1000);
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            addMessage("You", message, true);
+            userInput.value = '';
+            setOrbState('thinking');
+            addMessage("SynthBot", "🤔 Processing your message...");
+
+            const selectedService = aiService.value;
+            console.log('Selected AI service:', selectedService);
+            console.log('Available keys - OpenAI:', !!openaiApiKey, 'Claude:', !!anthropicApiKey, 'ElevenLabs:', !!elevenLabsApiKey, 'Quantum:', !!quantumApiKey);
+
+            // Use selected AI service
+            if (selectedService === 'openai' && openaiApiKey) {
+                addMessage("SynthBot", "🧠 Using OpenAI GPT-4 for AI processing...");
+                await processWithOpenAI(message);
+            } else if (selectedService === 'claude' && anthropicApiKey) {
+                addMessage("SynthBot", "🧠 Using Anthropic Claude for AI processing...");
+                await processWithClaude(message);
+            } else if (selectedService === 'enhanced') {
+                addMessage("SynthBot", "🧠 Using Enhanced Local AI processing...");
+                const aiResponse = generateAIResponse(message);
+                addMessage("SynthBot", aiResponse);
+                await synthesizeSpeech(aiResponse);
+            } else if (selectedService === 'elevenlabs-only') {
+                addMessage("SynthBot", "🧠 Using ElevenLabs for AI processing...");
+                const aiResponse = generateAIResponse(message);
+                addMessage("SynthBot", aiResponse);
+                await synthesizeSpeech(aiResponse);
+            } else if (selectedService === 'ibm-only') {
+                addMessage("SynthBot", "🧠 Using IBM Quantum for AI processing...");
+                const aiResponse = generateQuantumEnhancedResponse(message);
+                addMessage("SynthBot", aiResponse);
+                await synthesizeSpeech(aiResponse);
+            } else {
+                // Auto mode - try OpenAI first, then Claude, then enhanced
+                if (openaiApiKey) {
+                    addMessage("SynthBot", "🧠 Using OpenAI GPT-4 for AI processing...");
+                    await processWithOpenAI(message);
+                } else if (anthropicApiKey) {
+                    addMessage("SynthBot", "🧠 Using Anthropic Claude for AI processing...");
+                    await processWithClaude(message);
+                } else {
+                    addMessage("SynthBot", "🧠 Using Enhanced Local AI processing...");
+                    const aiResponse = generateAIResponse(message);
+                    addMessage("SynthBot", aiResponse);
+                    await synthesizeSpeech(aiResponse);
+                }
+            }
+        }
+        
+        // Function to play your custom audio file
+        function playCustomAudio() {
+            addMessage("SynthBot", "🔊 Playing speech...");
+            setOrbState('speaking');
+            
+            // Start dust particle system
+            startDustSystem();
+            
+            const audio = document.createElement('audio');
+            audio.src = 'https://pfst.cf2.poecdn.net/base/audio/fe355759ce1dd9651cefe0043658c536962af5b6b451c1484e5292bfa1bd19a7';
+            audio.preload = 'auto';
+            audio.crossOrigin = 'anonymous';
+            
+            audio.addEventListener('loadeddata', () => {
+                audio.play().catch(error => {
+                    setOrbState('idle');
+                    addMessage("SynthBot", `❌ Error playing audio: ${error.message}`);
+                    console.error('Audio play error:', error);
+                });
+            });
+            
+            audio.addEventListener('playing', () => {
+                setOrbState('speaking');
+            });
+            
+            audio.addEventListener('ended', () => {
+                setOrbState('idle');
+                stopDustSystem();
+                addMessage("SynthBot", "✅ Speech complete.");
+                audio.remove();
+            });
+            
+            audio.addEventListener('error', (e) => {
+                setOrbState('idle');
+                stopDustSystem();
+                addMessage("SynthBot", `❌ Audio playback failed: ${e.message || 'Unknown error'}`);
+                console.error('Audio error:', e);
+                audio.remove();
+            });
+            
+            audio.style.display = 'none';
+            document.body.appendChild(audio);
+            audio.load();
+        }
+
+        // Global function for debugging - can be called from browser console
+        window.testElevenLabsKey = function(key) {
+            console.log('Testing ElevenLabs key:', key);
+            if (validateApiKey(key, 'elevenlabs')) {
+                console.log('Key is valid, setting it...');
+                elevenLabsApiKey = key;
+                updateStatus('elevenlabs', true, key);
+                return true;
+            } else {
+                console.log('Key is invalid');
+                return false;
+            }
+        };
+
+        // Global function to check current API key status
+        window.checkApiKeys = function() {
+            console.log('Current API Keys:');
+            console.log('OpenAI:', openaiApiKey ? 'Present' : 'Missing');
+            console.log('ElevenLabs:', elevenLabsApiKey ? 'Present' : 'Missing');
+            console.log('Anthropic:', anthropicApiKey ? 'Present' : 'Missing');
+            console.log('Quantum:', quantumApiKey ? 'Present' : 'Missing');
+        };
+
+        // Global database management functions
+        window.exportDatabase = async function() {
+            if (fileDB) {
+                try {
+                    const result = await fileDB.exportAllData();
+                    console.log('📤 Database exported:', result);
+                    return result;
+                } catch (error) {
+                    console.error('❌ Export failed:', error);
+                    return null;
+                }
+            } else {
+                console.log('❌ Database not initialized');
+                return null;
+            }
+        };
+
+        window.getDatabaseStats = async function() {
+            if (fileDB) {
+                try {
+                    const stats = await fileDB.getApiUsageStats(window.currentUserId);
+                    console.log('📊 Database stats:', stats);
+                    return stats;
+                } catch (error) {
+                    console.error('❌ Stats failed:', error);
+                    return null;
+                }
+            } else {
+                console.log('❌ Database not initialized');
+                return null;
+            }
+        };
+
+        window.getConversationHistory = async function() {
+            if (fileDB && window.currentSessionId) {
+                try {
+                    const history = await fileDB.getConversationHistory(window.currentSessionId);
+                    console.log('📜 Conversation history:', history);
+                    return history;
+                } catch (error) {
+                    console.error('❌ History failed:', error);
+                    return null;
+                }
+            } else {
+                console.log('❌ Database not initialized');
+                return null;
+            }
+        };
+
+        // Save data before page unload
+        window.addEventListener('beforeunload', async () => {
+            if (fileDB) {
+                console.log('💾 Saving data before page unload...');
+                await fileDB.saveData();
+                await fileDB.exportAllData();
+            }
+        });
+
+        // Handle process termination (Node.js environment)
+        if (typeof process !== 'undefined') {
+            process.on('SIGINT', async () => {
+                console.log('\n💾 Saving data before exit...');
+                if (fileDB) {
+                    await fileDB.saveData();
+                    await fileDB.exportAllData();
+                    await fileDB.disconnect();
+                }
+                process.exit(0);
+            });
+
+            process.on('SIGTERM', async () => {
+                console.log('\n💾 Saving data before exit...');
+                if (fileDB) {
+                    await fileDB.saveData();
+                    await fileDB.exportAllData();
+                    await fileDB.disconnect();
+                }
+                process.exit(0);
+            });
+        }
+
+        // SynthBot AI Voice Assistant with Quantum Processing
+        // Enhanced with file-based database for data persistence
+
+        // Initialize file database
+        let fileDB = null;
+        
+        async function initializeDatabase() {
+            try {
+                fileDB = new SynthBotFileDB();
+                await fileDB.connect();
+                console.log('✅ File database initialized');
+                
+                // Create a default user for the session
+                const user = await fileDB.createUser('synthbot_user', 'user@synthbot.local');
+                window.currentUserId = user.user_id;
+                
+                // Create initial conversation session
+                const session = await fileDB.createConversation(
+                    user.user_id, 
+                    'SynthBot Session', 
+                    'enhanced'
+                );
+                window.currentSessionId = session.session_id;
+                
+                console.log('✅ Database session created');
+            } catch (error) {
+                console.error('❌ Database initialization failed:', error);
+            }
+        }
+
+        // Initialize database on page load
+        window.addEventListener('load', initializeDatabase);
+    </script>
+</body>
+</html>

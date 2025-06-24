@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        npm ci
+        npm install -g eslint prettier
+
+    - name: Lint JavaScript
+      run: |
+        eslint *.js --ext .js
+        prettier --check *.js
+
+    - name: Lint HTML
+      run: |
+        npx htmlhint index.html
+
+    - name: Lint CSS
+      run: |
+        npx stylelint "*.css" --fix
+
+    - name: Check file structure
+      run: |
+        # Check if required files exist
+        test -f index.html || exit 1
+        test -f file_db.js || exit 1
+        test -f README.md || exit 1
+        test -f LICENSE || exit 1
+        test -f .gitignore || exit 1
+
+    - name: Validate JSON files
+      run: |
+        # Check if JSON files are valid
+        for file in synthbot_data/**/*.json; do
+          if [ -f "$file" ]; then
+            python3 -m json.tool "$file" > /dev/null
+          fi
+        done
+
+    - name: Security audit
+      run: |
+        npm audit --audit-level moderate
+
+    - name: Build test
+      run: |
+        # Test if the app can be served
+        python3 -m http.server 8000 &
+        SERVER_PID=$!
+        sleep 5
+        curl -f http://localhost:8000 || exit 1
+        kill $SERVER_PID
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: .
+        publish_branch: gh-pages 
