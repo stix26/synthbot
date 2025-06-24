@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![AI Services](https://img.shields.io/badge/AI-OpenAI%20%7C%20Anthropic%20%7C%20IBM%20Quantum-green.svg)](https://github.com/yourusername/synthbot)
+[![AI Services](https://img.shields.io/badge/AI-OpenAI%20%7C%20Anthropic%20%7C%20IBM%20Quantum-green.svg)](https://github.com/stix26/synthbot)
 
 ## 🎥 Video Tutorial
 
@@ -101,7 +101,7 @@ Experience SynthBot's full capabilities with our interactive demo. The demo show
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/synthbot.git
+   git clone https://github.com/stix26/synthbot.git
    cd synthbot
    ```
 
@@ -309,7 +309,7 @@ Synthbot/
 ### Development Setup
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/synthbot.git
+git clone https://github.com/stix26/synthbot.git
 cd synthbot
 
 # Start development server
@@ -388,9 +388,9 @@ Enable debug mode in settings to see:
 ## 🤝 Support
 
 ### Getting Help
-- **Issues**: [GitHub Issues](https://github.com/yourusername/synthbot/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/synthbot/discussions)
-- **Wiki**: [Project Wiki](https://github.com/yourusername/synthbot/wiki)
+- **Issues**: [GitHub Issues](https://github.com/stix26/synthbot/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/stix26/synthbot/discussions)
+- **Wiki**: [Project Wiki](https://github.com/stix26/synthbot/wiki)
 
 ### Community
 - **Discord**: [Join our Discord](https://discord.gg/synthbot)
@@ -411,10 +411,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📊 Project Stats
 
-![GitHub stars](https://img.shields.io/github/stars/yourusername/synthbot)
-![GitHub forks](https://img.shields.io/github/forks/yourusername/synthbot)
-![GitHub issues](https://img.shields.io/github/issues/yourusername/synthbot)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/yourusername/synthbot)
+![GitHub stars](https://img.shields.io/github/stars/stix26/synthbot)
+![GitHub forks](https://img.shields.io/github/forks/stix26/synthbot)
+![GitHub issues](https://img.shields.io/github/issues/stix26/synthbot)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/stix26/synthbot)
 
 ---
 

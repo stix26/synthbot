@@ -37,12 +37,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/synthbot.git"
+    "url": "https://github.com/stix26/synthbot.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/synthbot/issues"
+    "url": "https://github.com/stix26/synthbot/issues"
   },
-  "homepage": "https://github.com/yourusername/synthbot#readme",
+  "homepage": "https://github.com/stix26/synthbot#readme",
   "engines": {
     "node": ">=14.0.0",
     "npm": ">=6.0.0"
