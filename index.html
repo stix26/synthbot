@@ -1074,14 +1074,14 @@
             if (fileDB && window.currentSessionId && window.currentUserId) {
                 try {
                     const messageType = isUser ? 'user_input' : 'ai_response';
-                    const aiService = aiService.value || 'enhanced';
+                    const selectedAiService = aiService.value || 'enhanced';
                     
                     await fileDB.addMessage(
                         window.currentSessionId,
                         window.currentUserId,
                         messageType,
                         content,
-                        aiService
+                        selectedAiService
                     );
                 } catch (error) {
                     console.error('Failed to save message to database:', error);
