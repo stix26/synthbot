@@ -7,37 +7,7 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![AI Services](https://img.shields.io/badge/AI-OpenAI%20%7C%20Anthropic%20%7C%20IBM%20Quantum-green.svg)](https://github.com/stix26/synthbot)
 
-## 🎥 Video Tutorial
-
-**Watch SynthBot in Action!**
-
-<!-- Option 1: YouTube Embed -->
-[![SynthBot Demo](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
-
-<!-- Option 2: Direct Video File (if hosted on GitHub) -->
-<!-- ![SynthBot Demo](docs/synthbot-demo.mp4) -->
-
-<!-- Option 3: GIF Demo -->
-<!-- ![SynthBot Demo](docs/synthbot-demo.gif) -->
-
-**[📺 Watch Full Demo](https://youtube.com/watch?v=YOUR_VIDEO_ID)** | **[🎬 Download Demo Video](docs/synthbot-demo.mp4)**
-
-### What You'll See:
-- 🎤 **Voice Input/Output** - Real-time speech interaction with natural conversations
-- 🤖 **AI Processing** - Multi-platform AI responses and intelligent dialogue
-- 🎨 **Cyberpunk UI** - Neon interface animations and smooth interactions
-- ⚙️ **Advanced Features** - Quantum computing integration and data persistence
-- 💾 **Data Management** - Automatic conversation saving and export features
-- 🔮 **Quantum Features** - IBM Quantum-enhanced responses and insights
-
-### Demo Highlights:
-- Natural conversations about technology and capabilities
-- Voice synthesis with multiple voice options
-- AI service switching and quantum enhancements
-- Real-time data persistence and conversation history
-- Beautiful cyberpunk interface in action
-
-## 🚀 Live Demo
+## 🎥 Demo
 
 **Try SynthBot Right Now!**
 
